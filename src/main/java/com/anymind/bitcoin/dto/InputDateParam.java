@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author sonyg
+ * @author Sony George : mr.sony.george@gmail.com
  */
 @Data
 public class InputDateParam {

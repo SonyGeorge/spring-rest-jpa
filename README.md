@@ -8,10 +8,10 @@
 ## Pre-Actions to be performed
 
 * create the database named ```anymind_bitcoin``` in mysql local db, using the SQL ```CREATE DATABASE `anymind_bitcoin` /*!40100 COLLATE 'utf8mb4_unicode_ci' */;```
-* open the application.properties file and edit the database connection information under the #datasource section
+* open the ```application.properties``` file and edit the database connection information under the #datasource section
 
 ## Usage
-All commands should be run under root folder
+All commands should be executed under root folder of the project
  
 Build the project:
 
@@ -35,3 +35,4 @@ Default URL for GUI user:
 * No Spring Security features added to the project
 * swagger API documentation is implemented and swagger UI is implemented for easy testing of application
 * editing of ```application.properties``` file is required to connect to local mysql database
+* spring actuator is added to project

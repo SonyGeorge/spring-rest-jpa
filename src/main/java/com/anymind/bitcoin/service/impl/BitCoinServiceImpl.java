@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import com.anymind.bitcoin.entity.Transaction;
 import com.anymind.bitcoin.repository.BitCoinRepository;
 import com.anymind.bitcoin.service.BitCoinService;
+/**
+ *
+ * @author Sony George : mr.sony.george@gmail.com
+ */
 
 @Service
 public class BitCoinServiceImpl implements BitCoinService {

@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+/**
+ *
+ * @author Sony George : mr.sony.george@gmail.com
+ */
 
 @SpringBootApplication
 @ComponentScan({"com.anymind.bitcoin.*"})

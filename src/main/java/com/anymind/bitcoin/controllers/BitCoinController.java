@@ -28,7 +28,7 @@ import com.anymind.bitcoin.service.BitCoinService;
 
 /**
  *
- * @author Sony George
+ * @author Sony George : mr.sony.george@gmail.com
  */
 @RestController
 @RequestMapping("/bitcoin")

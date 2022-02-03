@@ -10,7 +10,7 @@ import com.anymind.bitcoin.entity.Transaction;
 
 /**
  *
- * @author sonyg
+ * @author Sony George : mr.sony.george@gmail.com
  */
 @Repository
 public interface BitCoinRepository extends JpaRepository<Transaction, Long> {

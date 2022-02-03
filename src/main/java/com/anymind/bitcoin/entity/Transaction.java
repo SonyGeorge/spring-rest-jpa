@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 
 /**
  *
- * @author sonyg
+ * @author Sony George : mr.sony.george@gmail.com
  */
 @Entity
 @Table(name = "transactions")
