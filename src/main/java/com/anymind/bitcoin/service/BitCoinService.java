@@ -3,6 +3,8 @@ package com.anymind.bitcoin.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.anymind.bitcoin.dto.InputDateParam;
+import com.anymind.bitcoin.dto.TransactionDTO;
 import com.anymind.bitcoin.entity.Transaction;
 
 /**
@@ -24,5 +26,9 @@ public interface BitCoinService {
     public boolean deleteBitCoinTransaction(Transaction transaction);
 
     public boolean deleteBitCoinTransactionById(Long id);
+
+    public List<TransactionDTO> getBitCoinTransactionsHourlyBased(InputDateParam inputDateParam);
+
+    public List<TransactionDTO> getBitCoinTransactionsHourlyBalanceIncremental(InputDateParam inputDateParam);
 
 }

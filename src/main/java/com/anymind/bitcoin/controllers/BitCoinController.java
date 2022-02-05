@@ -3,7 +3,6 @@ package com.anymind.bitcoin.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anymind.bitcoin.dto.InputDateParam;
+import com.anymind.bitcoin.dto.TransactionDTO;
 import com.anymind.bitcoin.entity.Transaction;
 import com.anymind.bitcoin.service.BitCoinService;
 
@@ -66,23 +66,48 @@ public class BitCoinController {
         return ResponseEntity.ok(bitCoinService.getBitCoinTransactionByCoinName(coinName));
     }
 
-    @GetMapping(value = "/v1/{fromdate}/{todate}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(notes = "API to get BitCoin Transactions based on date, GET Method", value = "getBitCoinTransactionsHourlyBasedOnDate1")
-    public ResponseEntity<List<Transaction>> getBitCoinTransactionsHourlyBasedOnDate1(
-            @ApiParam(name = "fromdate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-02T00:00:00")
+    @GetMapping(value = "/v1/by-date/{fromdate}/{todate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(notes = "GET method API to get BitCoin Transactions based on date, GET Method", value = "getBitCoinTransactionsHourlyBasedOnDate1")
+    public ResponseEntity<List<TransactionDTO>> getBitCoinTransactionsHourlyBasedOnDate1(
+            @ApiParam(name = "fromdate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-01T00:00:00")
             @PathVariable(name = "fromdate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fromDate,
-            @ApiParam(name = "todate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-10T23:59:00")
+            @ApiParam(name = "todate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-27T23:59:00")
             @PathVariable(name = "todate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime toDate) {
-        LOG.debug("fromDate is :" + fromDate);
-        LOG.debug("toDate is :" + toDate);
-        return null;
+        LOG.debug("fromDate value from parameter is :{}", fromDate);
+        LOG.debug("toDate value from parameter   is :{}", toDate);
+        InputDateParam inputDateParam = new InputDateParam();
+        inputDateParam.setFromDate(fromDate);
+        inputDateParam.setToDate(toDate);
+        return ResponseEntity.ok(bitCoinService.getBitCoinTransactionsHourlyBased(inputDateParam));
+    }
+
+    @GetMapping(value = "/v1/by-hour-balance/{fromdate}/{todate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(notes = "GET method API to get BitCoin Transactions based on date using incremental balance of BTC every hour", value = "getBitCoinTransactionsHourlyBasedOnDate1")
+    public ResponseEntity<List<TransactionDTO>> getBitCoinTransactionsHourlyBalanceIncremental1(
+            @ApiParam(name = "fromdate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-01T00:00:00")
+            @PathVariable(name = "fromdate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fromDate,
+            @ApiParam(name = "todate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-27T23:59:00")
+            @PathVariable(name = "todate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime toDate) {
+        LOG.debug("fromDate value from parameter is :{}", fromDate);
+        LOG.debug("toDate value from parameter   is :{}", toDate);
+        InputDateParam inputDateParam = new InputDateParam();
+        inputDateParam.setFromDate(fromDate);
+        inputDateParam.setToDate(toDate);
+        return ResponseEntity.ok(bitCoinService.getBitCoinTransactionsHourlyBalanceIncremental(inputDateParam));
     }
 
     @PostMapping(value = "/v1/by-date", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(notes = "Alternative POST method for GET API of '/v1/{fromdate}/{todate}'", value = "getBitCoinTransactionsHourlyBasedOnDate2")
-    public ResponseEntity<List<Transaction>> getBitCoinTransactionsHourlyBasedOnDate2(@Valid @RequestBody InputDateParam inputDates) {
-        LOG.debug("request object is :" + inputDates);
-        return null;
+    @ApiOperation(notes = "Alternative POST method for GET API of '/v1/by-date/{fromdate}/{todate}'", value = "getBitCoinTransactionsHourlyBasedOnDate2")
+    public ResponseEntity<List<TransactionDTO>> getBitCoinTransactionsHourlyBasedOnDate2(@Valid @RequestBody InputDateParam inputDateParam) {
+        LOG.debug("inputDateParam object is :{}", inputDateParam);
+        return ResponseEntity.ok(bitCoinService.getBitCoinTransactionsHourlyBased(inputDateParam));
+    }
+
+    @PostMapping(value = "/v1/by-hour-balance", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(notes = "Alternative POST method for GET API of '/v1/by-hour-balance/{fromdate}/{todate}', using incremental balance of BTC every hour", value = "getBitCoinTransactionsHourlyBasedOnDate2")
+    public ResponseEntity<List<TransactionDTO>> getBitCoinTransactionsHourlyBalanceIncremental2(@Valid @RequestBody InputDateParam inputDateParam) {
+        LOG.debug("inputDateParam object is :{}", inputDateParam);
+        return ResponseEntity.ok(bitCoinService.getBitCoinTransactionsHourlyBalanceIncremental(inputDateParam));
     }
 
     @PostMapping(value = "/v1/", produces = MediaType.APPLICATION_JSON_VALUE)

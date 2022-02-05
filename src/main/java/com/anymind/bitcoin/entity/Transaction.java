@@ -1,7 +1,10 @@
 package com.anymind.bitcoin.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -28,7 +31,9 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "Transaction.findAll", query = "SELECT t FROM Transaction t "),
     @NamedQuery(name = "Transaction.findByCoinName", query = "SELECT t FROM Transaction t WHERE t.coinName = :coinName")})
 @Data
-public class Transaction {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Transaction implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -23,11 +23,14 @@ Run Project:
 
 Default URL for GUI user:
 * http://localhost:8080/swagger-ui.html
+* use the ```bit-coin-controller``` in the swagger UI to test the REST APIs
 
 ## Points to be noted
 * Project is configured with Spring + REST + JPA (Hibernate)
 * Project has, controller layer, Service layer, Repository layer and Entity
 * named query is implemented in Repository
+* validations are handled by javax.validation
+* Interface-based DTO projections is implemented for native query
 * ```Lombok``` is implemented
 * ```flywaydb``` is implemented for database migration and update
 * ```slf4j``` is implemented with spring log-back
@@ -36,3 +39,4 @@ Default URL for GUI user:
 * swagger API documentation is implemented and swagger UI is implemented for easy testing of application
 * editing of ```application.properties``` file is required to connect to local mysql database
 * spring actuator is added to project
+* spring Junit5 integration test is added to project

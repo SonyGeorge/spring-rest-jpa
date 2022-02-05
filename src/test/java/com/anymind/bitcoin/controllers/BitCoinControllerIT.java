@@ -19,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import com.anymind.bitcoin.BaseTestClass;
+import com.anymind.bitcoin.TransactionDTOImpl;
 import com.anymind.bitcoin.dto.InputDateParam;
 import com.anymind.bitcoin.entity.Transaction;
 
@@ -96,8 +97,8 @@ public class BitCoinControllerIT extends BaseTestClass {
      * Test of getBitCoinTransactionsHourlyBasedOnDate1 method, of class
      * BitCoinController.
      */
-//    @Test
-//    @Order(4)
+    @Test
+    @Order(4)
     public void testGetBitCoinTransactionsHourlyBasedOnDate1() {
         System.out.println("getBitCoinTransactionsHourlyBasedOnDate1 test started !!!");
         LocalDateTime fromDate = LocalDateTime.of(2022, Month.FEBRUARY, 01, 00, 00, 00);
@@ -106,33 +107,68 @@ public class BitCoinControllerIT extends BaseTestClass {
         System.out.println(toDate.format(DateTimeFormatter.ISO_DATE_TIME));
         assertNotNull(
                 this.restTemplate
-                        .getForObject("http://localhost:" + port + "/bitcoin/v1/" + fromDate.format(DateTimeFormatter.ISO_DATE_TIME) + "/" + toDate.format(DateTimeFormatter.ISO_DATE_TIME), Transaction[].class));
+                        .getForObject("http://localhost:" + port + "/bitcoin/v1/by-date/" + fromDate.format(DateTimeFormatter.ISO_DATE_TIME) + "/" + toDate.format(DateTimeFormatter.ISO_DATE_TIME), TransactionDTOImpl[].class));
         System.out.println("getBitCoinTransactionsHourlyBasedOnDate1 test completed ###");
+    }
+
+    /**
+     * Test of getBitCoinTransactionsHourlyBalanceIncremental1 method, of class
+     * BitCoinController.
+     */
+    @Test
+    @Order(5)
+    public void getBitCoinTransactionsHourlyBalanceIncremental1() {
+        System.out.println("getBitCoinTransactionsHourlyBalanceIncremental1 test started !!!");
+        LocalDateTime fromDate = LocalDateTime.of(2022, Month.FEBRUARY, 01, 00, 00, 00);
+        LocalDateTime toDate = LocalDateTime.of(2022, Month.FEBRUARY, 27, 23, 59, 00);
+        System.out.println(fromDate.format(DateTimeFormatter.ISO_DATE_TIME));
+        System.out.println(toDate.format(DateTimeFormatter.ISO_DATE_TIME));
+        assertNotNull(
+                this.restTemplate
+                        .getForObject("http://localhost:" + port + "/bitcoin/v1/by-hour-balance/" + fromDate.format(DateTimeFormatter.ISO_DATE_TIME) + "/" + toDate.format(DateTimeFormatter.ISO_DATE_TIME), TransactionDTOImpl[].class));
+        System.out.println("getBitCoinTransactionsHourlyBalanceIncremental1 test completed ###");
     }
 
     /**
      * Test of getBitCoinTransactionsHourlyBasedOnDate2 method, of class
      * BitCoinController.
      */
-//    @Test
-//    @Order(5)
+    @Test
+    @Order(6)
     public void testGetBitCoinTransactionsHourlyBasedOnDate2() {
-        System.out.println("getBitCoinTransactionsHourlyBasedOnDate2");
+        System.out.println("getBitCoinTransactionsHourlyBasedOnDate2 test started !!!");
         InputDateParam inputDates = new InputDateParam();
         inputDates.setFromDate(LocalDateTime.of(2022, Month.FEBRUARY, 01, 00, 00, 00));
         inputDates.setToDate(LocalDateTime.of(2022, Month.FEBRUARY, 27, 23, 59, 00));
         assertNotNull(
                 this.restTemplate
-                        .postForEntity("http://localhost:" + port + "/bitcoin/v1/", inputDates, Transaction.class));
+                        .postForEntity("http://localhost:" + port + "/bitcoin/v1/by-date/", inputDates, TransactionDTOImpl[].class));
+        System.out.println("getBitCoinTransactionsHourlyBasedOnDate2 test completed ###");
+    }
+    /**
+     * Test of getBitCoinTransactionsHourlyBalanceIncremental2 method, of class
+     * BitCoinController.
+     */
+    @Test
+    @Order(7)
+    public void getBitCoinTransactionsHourlyBalanceIncremental2() {
+        System.out.println("getBitCoinTransactionsHourlyBalanceIncremental2 test started !!!");
+        InputDateParam inputDates = new InputDateParam();
+        inputDates.setFromDate(LocalDateTime.of(2022, Month.FEBRUARY, 01, 00, 00, 00));
+        inputDates.setToDate(LocalDateTime.of(2022, Month.FEBRUARY, 27, 23, 59, 00));
+        assertNotNull(
+                this.restTemplate
+                        .postForEntity("http://localhost:" + port + "/bitcoin/v1/by-hour-balance/", inputDates, TransactionDTOImpl[].class));
+        System.out.println("getBitCoinTransactionsHourlyBalanceIncremental2 test completed ###");
     }
 
     /**
      * Test of saveBitCoinTransaction method, of class BitCoinController.
      */
     @Test
-    @Order(6)
+    @Order(8)
     public void testSaveBitCoinTransaction() {
-        System.out.println("saveBitCoinTransaction");
+        System.out.println("saveBitCoinTransaction test started !!!");
         Transaction transaction = new Transaction();
         transaction.setCoinName("BTC");
         transaction.setAmount(random(35));
@@ -140,17 +176,17 @@ public class BitCoinControllerIT extends BaseTestClass {
         assertNotNull(
                 this.restTemplate
                         .postForEntity("http://localhost:" + port + "/bitcoin/v1/", transaction, Transaction.class));
+        System.out.println("saveBitCoinTransaction test completed ###");
     }
 
     /**
      * Test of updateBitCoinTransaction method, of class BitCoinController.
      */
     @Test
-    @Order(7)
+    @Order(9)
     public void testUpdateBitCoinTransaction() {
-        System.out.println("updateBitCoinTransaction");
+        System.out.println("updateBitCoinTransaction test started !!!");
         Transaction transaction = new Transaction();
-//        transaction.setId(1L);
         transaction.setCoinName("BTC");
         transaction.setAmount(random(35));
         transaction.setDatetime(Instant.now());
@@ -158,16 +194,16 @@ public class BitCoinControllerIT extends BaseTestClass {
         HttpEntity entity = new HttpEntity(transaction, headers);
         assertNotNull(
                 this.restTemplate.exchange("http://localhost:" + port + "/bitcoin/v1/1", HttpMethod.PUT, entity, Transaction.class));
-
+        System.out.println("updateBitCoinTransaction test completed ###");
     }
 
     /**
      * Test of deleteBitCoinTransaction method, of class BitCoinController.
      */
     @Test
-    @Order(8)
+    @Order(10)
     public void deleteBitCoinTransactionById() {
-        System.out.println("deleteBitCoinTransaction");
+        System.out.println("deleteBitCoinTransaction test started !!!");
         Transaction transaction = new Transaction();
         transaction.setCoinName("BTC");
         transaction.setAmount(random(35));
@@ -176,6 +212,7 @@ public class BitCoinControllerIT extends BaseTestClass {
                 .postForEntity("http://localhost:" + port + "/bitcoin/v1/", transaction, Transaction.class);
         this.restTemplate
                 .delete("http://localhost:" + port + "/bitcoin/v1/" + existing.getBody().getId());
+        System.out.println("deleteBitCoinTransaction test completed ###");
     }
 
     public static BigDecimal random(int range) {
