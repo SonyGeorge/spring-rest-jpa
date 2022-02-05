@@ -3,7 +3,10 @@ package com.anymind.bitcoin.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -42,58 +45,70 @@ public class BitCoinController {
 
     @GetMapping(value = "/v1/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "API to get All BitCoin Transactions", value = "getAllBitCoinTransactions")
-    public ResponseEntity<?> getAllBitCoinTransactions() {
+    public ResponseEntity<List<Transaction>> getAllBitCoinTransactions() {
         return ResponseEntity.ok(bitCoinService.getAllBitCoinTransactions());
     }
 
     @GetMapping(value = "/v1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "API to get BitCoin Transaction by id", value = "getBitCoinTransactionById")
-    public ResponseEntity<?> getBitCoinTransactionById(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(bitCoinService.getBitCoinTransactionById(id));
+    public ResponseEntity<Transaction> getBitCoinTransactionById(@PathVariable(name = "id") Long id) {
+        Optional<Transaction> existingTransaction = bitCoinService.getBitCoinTransactionById(id);
+        if (existingTransaction.isPresent()) {
+            return ResponseEntity.ok(existingTransaction.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping(value = "/v1/by-name/{coinName}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "another example of selecting the object using field", value = "getBitCoinTransactionByCoinName")
-    public ResponseEntity<?> getBitCoinTransactionByCoinName(@PathVariable(name = "coinName") String coinName) {
+    public ResponseEntity<List<Transaction>> getBitCoinTransactionByCoinName(@PathVariable(name = "coinName") String coinName) {
         return ResponseEntity.ok(bitCoinService.getBitCoinTransactionByCoinName(coinName));
     }
 
     @GetMapping(value = "/v1/{fromdate}/{todate}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "API to get BitCoin Transactions based on date, GET Method", value = "getBitCoinTransactionsHourlyBasedOnDate1")
-    public ResponseEntity<?> getBitCoinTransactionsHourlyBasedOnDate1(
+    public ResponseEntity<List<Transaction>> getBitCoinTransactionsHourlyBasedOnDate1(
             @ApiParam(name = "fromdate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-02T00:00:00")
             @PathVariable(name = "fromdate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime fromDate,
             @ApiParam(name = "todate", allowEmptyValue = false, required = true, format = "yyyy-MM-dd'T'HH:mm:ss", example = "2022-02-10T23:59:00")
             @PathVariable(name = "todate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime toDate) {
+        LOG.debug("fromDate is :" + fromDate);
+        LOG.debug("toDate is :" + toDate);
         return null;
     }
 
     @PostMapping(value = "/v1/by-date", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "Alternative POST method for GET API of '/v1/{fromdate}/{todate}'", value = "getBitCoinTransactionsHourlyBasedOnDate2")
-    public ResponseEntity<?> getBitCoinTransactionsHourlyBasedOnDate2(@Valid @RequestBody InputDateParam inputDates) {
+    public ResponseEntity<List<Transaction>> getBitCoinTransactionsHourlyBasedOnDate2(@Valid @RequestBody InputDateParam inputDates) {
+        LOG.debug("request object is :" + inputDates);
         return null;
     }
 
     @PostMapping(value = "/v1/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "POST API to save the BitCoin Transaction'", value = "saveBitCoinTransaction")
-    public ResponseEntity<?> saveBitCoinTransaction(@Valid @RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> saveBitCoinTransaction(@Valid @RequestBody Transaction transaction) {
         return ResponseEntity.ok(bitCoinService.saveBitCoinTransaction(transaction));
     }
 
-    @PutMapping(value = "/v1/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/v1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "PUT API to update the BitCoin Transaction  id value must be present, if not new object is created'", value = "updateBitCoinTransaction")
-    public ResponseEntity<?> updateBitCoinTransaction(@Valid @RequestBody Transaction transaction) {
-        return ResponseEntity.ok(bitCoinService.updateBitCoinTransaction(transaction));
+    public ResponseEntity<Transaction> updateBitCoinTransaction(@Valid @PathVariable(name = "id") Long id, @Valid @RequestBody Transaction transaction) {
+        Optional<Transaction> existingTransaction = bitCoinService.getBitCoinTransactionById(id);
+        if (existingTransaction.isPresent()) {
+            Transaction existingTrans = existingTransaction.get();
+            existingTrans.setCoinName(transaction.getCoinName());
+            existingTrans.setAmount(transaction.getAmount());
+            existingTrans.setDatetime(transaction.getDatetime());
+            return ResponseEntity.ok(bitCoinService.updateBitCoinTransaction(existingTrans));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @DeleteMapping(value = "/v1/", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(notes = "DELETE API to delete the BitCoin Transaction, id value must be present...'", value = "deleteBitCoinTransaction")
-    public ResponseEntity<?> deleteBitCoinTransaction(@Valid @RequestBody Transaction transaction) {
-        return ResponseEntity.ok(bitCoinService.deleteBitCoinTransaction(transaction));
-    }
     @DeleteMapping(value = "/v1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(notes = "DELETE API to delete the BitCoin Transaction'", value = "deleteBitCoinTransaction")
-    public ResponseEntity<?> deleteBitCoinTransaction(@Valid @PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> deleteBitCoinTransactionById(@Valid @PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(bitCoinService.deleteBitCoinTransactionById(id));
     }
 }

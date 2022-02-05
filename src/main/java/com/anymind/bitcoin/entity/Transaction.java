@@ -13,7 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -34,10 +36,10 @@ public class Transaction {
     @NotBlank
     @Column(name = "coin_name")
     private String coinName;
-    @NotBlank
+    @DecimalMin(value = "1.0", inclusive = false)
     @Column(name = "amount")
     private BigDecimal amount;
-    @NotBlank
+    @NotNull
     @Column(name = "date_time")
     private Instant datetime;
 }

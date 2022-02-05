@@ -1,6 +1,7 @@
 package com.anymind.bitcoin.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,8 @@ public class BitCoinServiceImpl implements BitCoinService {
     }
 
     @Override
-    public Transaction getBitCoinTransactionById(Long id) {
-        return bitCoinRepository.findById(id).orElse(null);
+    public  Optional<Transaction> getBitCoinTransactionById(Long id) {
+        return bitCoinRepository.findById(id);
     }
 
     @Override

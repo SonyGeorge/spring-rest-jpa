@@ -1,6 +1,7 @@
 package com.anymind.bitcoin.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.anymind.bitcoin.entity.Transaction;
 
@@ -12,7 +13,7 @@ public interface BitCoinService {
 
     public List<Transaction> getAllBitCoinTransactions();
 
-    public Transaction getBitCoinTransactionById(Long id);
+    public Optional<Transaction> getBitCoinTransactionById(Long id);
 
     public List<Transaction> getBitCoinTransactionByCoinName(String coinName);
 
